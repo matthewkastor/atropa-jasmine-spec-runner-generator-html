@@ -210,7 +210,8 @@ ul.inheritsList
 				
 				
 			
-				Generates an HTML Jasmine Spec Runner for running tests in a web browser.
+				Generates an HTML Jasmine Spec Runner for running tests in a web
+ browser.
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/C__Users_kastor_Documents_GitHub_atropa-jasmine-spec-runner-generator-html_src_atropa-jasmine-spec-runner-generator-html.js.html">atropa-jasmine-spec-runner-generator-html.js</a>.
@@ -301,7 +302,8 @@ ul.inheritsList
 								<div class="fixedFont">
 								<b><a href="../symbols/JasmineSpecRunnerGenerator.html#specs">specs</a></b>
 								</div>
-								<div class="description">An array of URL's relative to your web root which point to test specs / fixtures.</div>
+								<div class="description">An array of URL's relative to your web root which point to test
+ specs / fixtures.</div>
 							</td>
 						</tr>
 					
@@ -349,7 +351,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/JasmineSpecRunnerGenerator.html#generate">generate</a></b>(callback)
 								</div>
-								<div class="description">Generates the Jasmine Spec Runner as a string and gives it to the callback.</div>
+								<div class="description">Generates the Jasmine Spec Runner as a string and gives it to the
+ callback.</div>
 							</td>
 						</tr>
 					
@@ -358,7 +361,8 @@ ul.inheritsList
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/JasmineSpecRunnerGenerator.html#generateFile">generateFile</a></b>(callback)
 								</div>
-								<div class="description">Generates the Jasmine Spec Runner and writes it to outputFile, then calls the callback function.</div>
+								<div class="description">Generates the Jasmine Spec Runner and writes it to outputFile, then calls
+ the callback function.</div>
 							</td>
 						</tr>
 					
@@ -407,7 +411,24 @@ ul.inheritsList
 				
 				
 				
-				<pre class="code">var JasmineSpecRunnerGenerator = require(     'atropa-jasmine-spec-runner-generator-html');specRunner = new JasmineSpecRunnerGenerator(     '/js/jasmine/', 'banana tester.html', 'Banana Test Suite');specRunner.addSources(__dirname, '/js/myLib/');specRunner.addSpecs('./specs/', '/myLib/test/specs/');specRunner.generate(console.log);// specRunner.generateFile(//     function () {//         console.log('ok');//     }// );</pre>
+				<pre class="code">var JasmineSpecRunnerGenerator = require(
+     'atropa-jasmine-spec-runner-generator-html');
+
+specRunner = new JasmineSpecRunnerGenerator(
+     '/js/jasmine/', 'banana tester.html', 'Banana Test Suite');
+
+specRunner.addSources(__dirname, '/js/myLib/');
+
+specRunner.addSpecs('./specs/', '/myLib/test/specs/');
+
+specRunner.generate(console.log);
+
+
+// specRunner.generateFile(
+//     function () {
+//         console.log('ok');
+//     }
+// );</pre>
 				
 				
 				
@@ -420,19 +441,22 @@ ul.inheritsList
 								<span class="light fixedFont">{String}</span>  <b>jasmineDirectory</b>
 								
 							</dt>
-								<dd>Optional. The location of jasmine-standalone relative to your web root. Defaults to /jasmine/</dd>
+								<dd>Optional. The location of
+ jasmine-standalone relative to your web root. Defaults to /jasmine/</dd>
 						
 							<dt>
 								<span class="light fixedFont">{String}</span>  <b>outputFile</b>
 								
 							</dt>
-								<dd>Optional. The name and location of the output HTML Jasmine Spec Runner. Defaults to Jasmine Spec Runner.html</dd>
+								<dd>Optional. The name and location of the output
+ HTML Jasmine Spec Runner. Defaults to Jasmine Spec Runner.html</dd>
 						
 							<dt>
 								<span class="light fixedFont">{String}</span>  <b>pageTitle</b>
 								
 							</dt>
-								<dd>Optional. The title of the output page. Defaults to Jasmine Spec Runner.</dd>
+								<dd>Optional. The title of the output page. Defaults
+ to Jasmine Spec Runner.</dd>
 						
 						</dl>
 					
@@ -466,7 +490,7 @@ ul.inheritsList
 					<a name="jasmineDirectory"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{String}</span>
 					<b>jasmineDirectory</b>
 					
 					</div>
@@ -486,7 +510,8 @@ ul.inheritsList
 							
 							<dd><a href="../symbols/JasmineSpecRunnerGenerator.html#generate">JasmineSpecRunnerGenerator#generate</a></dd>
 							
-							<dd><a href="https://github.com/pivotal/jasmine/downloads">jasmine-standalone</a></dd>
+							<dd><a href="https://github.com/pivotal/jasmine/downloads">
+jasmine-standalone</a></dd>
 							
 							</dl>
 						
@@ -504,7 +529,7 @@ ul.inheritsList
 					<a name="outputFile"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{String}</span>
 					<b>outputFile</b>
 					
 					</div>
@@ -540,7 +565,7 @@ ul.inheritsList
 					<a name="pageTitle"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{String}</span>
 					<b>pageTitle</b>
 					
 					</div>
@@ -576,7 +601,7 @@ ul.inheritsList
 					<a name="sourceFiles"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Array}</span>
 					<b>sourceFiles</b>
 					
 					</div>
@@ -612,12 +637,13 @@ ul.inheritsList
 					<a name="specs"> </a>
 					<div class="fixedFont">
 					
-					
+					<span class="light">{Array}</span>
 					<b>specs</b>
 					
 					</div>
 					<div class="description">
-						An array of URL's relative to your web root which point to test specs / fixtures.
+						An array of URL's relative to your web root which point to test
+ specs / fixtures.
 						
 						
 					</div>
@@ -661,7 +687,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Adds source files to test. This will read the filenames located in fsDir and build script src paths relative to your web root.
+						Adds source files to test. This will read the filenames located in fsDir
+ and build script src paths relative to your web root.
 						
 						
 					</div>
@@ -682,7 +709,8 @@ ul.inheritsList
 									<span class="light fixedFont">{String}</span> <b>webDir</b>
 									
 								</dt>
-								<dd>The location of source files relative to your web root.</dd>
+								<dd>The location of source files relative to your web
+ root.</dd>
 							
 							</dl>
 						
@@ -717,7 +745,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Adds test specs. This will read the filenames located in fsDir and build script src paths relative to your web root.
+						Adds test specs. This will read the filenames located in fsDir and build
+ script src paths relative to your web root.
 						
 						
 					</div>
@@ -738,7 +767,8 @@ ul.inheritsList
 									<span class="light fixedFont">{String}</span> <b>webDir</b>
 									
 								</dt>
-								<dd>The location of source files relative to your web root.</dd>
+								<dd>The location of source files relative to your web
+ root.</dd>
 							
 							</dl>
 						
@@ -773,7 +803,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Generates the Jasmine Spec Runner as a string and gives it to the callback.
+						Generates the Jasmine Spec Runner as a string and gives it to the
+ callback.
 						
 						
 					</div>
@@ -788,7 +819,8 @@ ul.inheritsList
 									<span class="light fixedFont">{Function}</span> <b>callback</b>
 									
 								</dt>
-								<dd>A function which takes a single string parameter.</dd>
+								<dd>A function which takes a single string
+ parameter.</dd>
 							
 							</dl>
 						
@@ -816,7 +848,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Generates the Jasmine Spec Runner and writes it to outputFile, then calls the callback function.
+						Generates the Jasmine Spec Runner and writes it to outputFile, then calls
+ the callback function.
 						
 						
 					</div>
@@ -861,7 +894,8 @@ ul.inheritsList
 					
 					</div>
 					<div class="description">
-						Generates SRC URL's. This will read the filenames located in fsDir and build script src paths relative to webDir.
+						Generates SRC URL's. This will read the filenames located in fsDir and
+ build script src paths relative to webDir.
 						
 						
 					</div>
@@ -882,7 +916,8 @@ ul.inheritsList
 									<span class="light fixedFont">{String}</span> <b>webDir</b>
 									
 								</dt>
-								<dd>The location of source files relative to your web root.</dd>
+								<dd>The location of source files relative to your web
+ root.</dd>
 							
 							</dl>
 						
@@ -893,7 +928,8 @@ ul.inheritsList
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Array}</span> Returns an array of URL's relative to the given webDir which point to every file ending in .js located in fsDir.</dd>
+								<dd><span class="light fixedFont">{Array}</span> Returns an array of URL's relative to the given webDir
+ which point to every file ending in .js located in fsDir.</dd>
 							
 							</dl>
 						
@@ -925,7 +961,8 @@ ul.inheritsList
 									<span class="light fixedFont">{Error}</span> <b>err</b>
 									
 								</dt>
-								<dd>Any error occurring while attempting to read the template file.</dd>
+								<dd>Any error occurring while attempting to read the
+ template file.</dd>
 							
 								<dt>
 									<span class="light fixedFont">{String}</span> <b>template</b>
@@ -973,7 +1010,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Mar 06 2013 20:38:21 GMT-0500 (EST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Mar 06 2013 21:23:35 GMT-0500 (EST)
 		</div>
 	</body>
 </html>

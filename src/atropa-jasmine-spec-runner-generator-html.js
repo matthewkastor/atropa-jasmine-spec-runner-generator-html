@@ -55,7 +55,7 @@ var JasmineSpecRunnerGenerator = function JasmineSpecRunnerGenerator(
     
     /**
      * The location of jasmine-standalone relative to your web root.
-     * @type {String}
+     * @type String
      * @fieldOf JasmineSpecRunnerGenerator#
      * @default /jasmine/
      * @see JasmineSpecRunnerGenerator#generate
@@ -66,7 +66,7 @@ var JasmineSpecRunnerGenerator = function JasmineSpecRunnerGenerator(
     this.jasmineDirectory = String(my.jasmineDirectory ).replace(/\\/g, '/');
     /**
      * The name and location of the output HTML Jasmine Spec Runner.
-     * @type {String}
+     * @type String
      * @fieldOf JasmineSpecRunnerGenerator#
      * @default Jasmine Spec Runner.html
      * @see JasmineSpecRunnerGenerator#generateFile
@@ -74,7 +74,7 @@ var JasmineSpecRunnerGenerator = function JasmineSpecRunnerGenerator(
     this.outputFile = outputFile || 'Jasmine Spec Runner.html';
     /**
      * The title of the output page.
-     * @type {String}
+     * @type String
      * @fieldOf JasmineSpecRunnerGenerator#
      * @default Jasmine Spec Runner
      * @see JasmineSpecRunnerGenerator#generate
@@ -82,7 +82,7 @@ var JasmineSpecRunnerGenerator = function JasmineSpecRunnerGenerator(
     this.pageTitle = pageTitle || 'Jasmine Spec Runner';
     /**
      * An array of URL's relative to your web root which point to files to test.
-     * @type {Array}
+     * @type Array
      * @fieldOf JasmineSpecRunnerGenerator#
      * @default []
      * @see JasmineSpecRunnerGenerator#addSources
@@ -91,7 +91,7 @@ var JasmineSpecRunnerGenerator = function JasmineSpecRunnerGenerator(
     /**
      * An array of URL's relative to your web root which point to test
      *  specs / fixtures.
-     * @type {Array}
+     * @type Array
      * @fieldOf JasmineSpecRunnerGenerator#
      * @default []
      * @see JasmineSpecRunnerGenerator#addSpecs

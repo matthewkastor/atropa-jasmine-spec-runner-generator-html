@@ -1,7 +1,7 @@
 {
                     
     "name"          : "atropa-jasmine-spec-runner-generator-html",
-    "version"       : "0.1.0",
+    "version"       : "0.1.0-1",
     "main"          : "./atropa-jasmine-spec-runner-generator-html.js",
     "description"   : "A node module to generate Jasmine Spec Runner html pages.",
     "keywords"      : ["atropa-jasmine-spec-runner-generator-html", "atropa", "utilities", "jasmine", "test"],

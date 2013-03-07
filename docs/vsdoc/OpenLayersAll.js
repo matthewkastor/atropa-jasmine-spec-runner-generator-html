@@ -33,11 +33,11 @@
         ///  HTML Jasmine Spec Runner. Defaults to Jasmine Spec Runner.html</param>
         /// <param name="pageTitle" type="String">Optional. The title of the output page. Defaults
         ///  to Jasmine Spec Runner.</param>
-        /// <field name="jasmineDirectory" type="">The location of jasmine-standalone relative to your web root.</field>
-        /// <field name="outputFile" type="">The name and location of the output HTML Jasmine Spec Runner.</field>
-        /// <field name="pageTitle" type="">The title of the output page.</field>
-        /// <field name="sourceFiles" type="">An array of URL&apos;s relative to your web root which point to files to test.</field>
-        /// <field name="specs" type="">An array of URL&apos;s relative to your web root which point to test
+        /// <field name="jasmineDirectory" type="String">The location of jasmine-standalone relative to your web root.</field>
+        /// <field name="outputFile" type="String">The name and location of the output HTML Jasmine Spec Runner.</field>
+        /// <field name="pageTitle" type="String">The title of the output page.</field>
+        /// <field name="sourceFiles" type="Array">An array of URL&apos;s relative to your web root which point to files to test.</field>
+        /// <field name="specs" type="Array">An array of URL&apos;s relative to your web root which point to test
         ///  specs / fixtures.</field>
         /// <returns type="JasmineSpecRunnerGenerator"/>
     };
