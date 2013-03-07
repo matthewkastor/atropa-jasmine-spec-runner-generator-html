@@ -1,0 +1,242 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"> <style>
+	.KEYW {color: #933;}
+	.COMM {color: #bbb; font-style: italic;}
+	.NUMB {color: #393;}
+	.STRN {color: #393;}
+	.REGX {color: #339;}
+	.line {border-right: 1px dotted #666; color: #666; font-style: normal;}
+	</style></head><body><pre><span class='line'>  1</span> <span class="COMM">/*jslint
+<span class='line'>  2</span>     white: true,
+<span class='line'>  3</span>     node: true,
+<span class='line'>  4</span>     stupid: true,
+<span class='line'>  5</span>     nomen: true
+<span class='line'>  6</span> */</span><span class="WHIT">
+<span class='line'>  7</span> 
+<span class='line'>  8</span> </span><span class="COMM">/**
+<span class='line'>  9</span>  * Generates an HTML Jasmine Spec Runner for running tests in a web browser.
+<span class='line'> 10</span>  * @class Generates an HTML Jasmine Spec Runner for running tests in a web
+<span class='line'> 11</span>  *  browser.
+<span class='line'> 12</span>  * @param {String} jasmineDirectory Optional. The location of
+<span class='line'> 13</span>  *  jasmine-standalone relative to your web root. Defaults to /jasmine/
+<span class='line'> 14</span>  * @param {String} outputFile Optional. The name and location of the output
+<span class='line'> 15</span>  *  HTML Jasmine Spec Runner. Defaults to Jasmine Spec Runner.html
+<span class='line'> 16</span>  * @param {String} pageTitle Optional. The title of the output page. Defaults
+<span class='line'> 17</span>  *  to Jasmine Spec Runner.
+<span class='line'> 18</span>  * @requires &lt;a href="https://npmjs.org/package/mustache">mustache&lt;/a>
+<span class='line'> 19</span>  * @requires &lt;a href="http://nodejs.org/api/fs.html">fs&lt;/a>
+<span class='line'> 20</span>  * @requires &lt;a href="http://nodejs.org/api/path.html">path&lt;/a>
+<span class='line'> 21</span>  * @example
+<span class='line'> 22</span>  * var JasmineSpecRunnerGenerator = require(
+<span class='line'> 23</span>  *      'atropa-jasmine-spec-runner-generator-html');
+<span class='line'> 24</span>  * 
+<span class='line'> 25</span>  * specRunner = new JasmineSpecRunnerGenerator(
+<span class='line'> 26</span>  *      '/js/jasmine/', 'banana tester.html', 'Banana Test Suite');
+<span class='line'> 27</span>  * 
+<span class='line'> 28</span>  * specRunner.addSources(__dirname, '/js/myLib/');
+<span class='line'> 29</span>  * 
+<span class='line'> 30</span>  * specRunner.addSpecs('./specs/', '/myLib/test/specs/');
+<span class='line'> 31</span>  * 
+<span class='line'> 32</span>  * specRunner.generate(console.log);
+<span class='line'> 33</span>  * 
+<span class='line'> 34</span>  * 
+<span class='line'> 35</span>  * // specRunner.generateFile(
+<span class='line'> 36</span>  * //     function () {
+<span class='line'> 37</span>  * //         console.log('ok');
+<span class='line'> 38</span>  * //     }
+<span class='line'> 39</span>  * // );
+<span class='line'> 40</span>  */</span><span class="WHIT">
+<span class='line'> 41</span> </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">JasmineSpecRunnerGenerator</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">JasmineSpecRunnerGenerator</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'> 42</span> </span><span class="WHIT">        </span><span class="NAME">jasmineDirectory</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 43</span> </span><span class="WHIT">        </span><span class="NAME">outputFile</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'> 44</span> </span><span class="WHIT">        </span><span class="NAME">pageTitle</span><span class="WHIT">
+<span class='line'> 45</span> </span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'> 46</span> </span><span class="WHIT">    </span><span class="STRN">"use strict"</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 47</span> </span><span class="WHIT">    </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">my</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">fs</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">path</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">mustache</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">templatePath</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 48</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 49</span> </span><span class="WHIT">    </span><span class="NAME">my</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">this</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 50</span> </span><span class="WHIT">    </span><span class="NAME">fs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'fs'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 51</span> </span><span class="WHIT">    </span><span class="NAME">path</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'path'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 52</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 53</span> </span><span class="WHIT">    </span><span class="NAME">mustache</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">require</span><span class="PUNC">(</span><span class="STRN">'mustache'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 54</span> </span><span class="WHIT">    </span><span class="NAME">templatePath</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">path.resolve</span><span class="PUNC">(</span><span class="NAME">__dirname</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'../templates/SpecRunner.mustache'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 55</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'> 56</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 57</span>      * The location of jasmine-standalone relative to your web root.
+<span class='line'> 58</span>      * @type {String}
+<span class='line'> 59</span>      * @fieldOf JasmineSpecRunnerGenerator#
+<span class='line'> 60</span>      * @default /jasmine/
+<span class='line'> 61</span>      * @see JasmineSpecRunnerGenerator#generate
+<span class='line'> 62</span>      * @see &lt;a href="https://github.com/pivotal/jasmine/downloads">
+<span class='line'> 63</span>      * jasmine-standalone&lt;/a>
+<span class='line'> 64</span>      */</span><span class="WHIT">
+<span class='line'> 65</span> </span><span class="WHIT">    </span><span class="NAME">this.jasmineDirectory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">jasmineDirectory</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'/jasmine/'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 66</span> </span><span class="WHIT">    </span><span class="NAME">this.jasmineDirectory</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">String</span><span class="PUNC">(</span><span class="NAME">my.jasmineDirectory</span><span class="WHIT"> </span><span class="PUNC">)</span><span class="PUNC">.</span><span class="NAME">replace</span><span class="PUNC">(</span><span class="REGX">/\\/g</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'/'</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 67</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 68</span>      * The name and location of the output HTML Jasmine Spec Runner.
+<span class='line'> 69</span>      * @type {String}
+<span class='line'> 70</span>      * @fieldOf JasmineSpecRunnerGenerator#
+<span class='line'> 71</span>      * @default Jasmine Spec Runner.html
+<span class='line'> 72</span>      * @see JasmineSpecRunnerGenerator#generateFile
+<span class='line'> 73</span>      */</span><span class="WHIT">
+<span class='line'> 74</span> </span><span class="WHIT">    </span><span class="NAME">this.outputFile</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">outputFile</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'Jasmine Spec Runner.html'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 75</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 76</span>      * The title of the output page.
+<span class='line'> 77</span>      * @type {String}
+<span class='line'> 78</span>      * @fieldOf JasmineSpecRunnerGenerator#
+<span class='line'> 79</span>      * @default Jasmine Spec Runner
+<span class='line'> 80</span>      * @see JasmineSpecRunnerGenerator#generate
+<span class='line'> 81</span>      */</span><span class="WHIT">
+<span class='line'> 82</span> </span><span class="WHIT">    </span><span class="NAME">this.pageTitle</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">pageTitle</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="STRN">'Jasmine Spec Runner'</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 83</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 84</span>      * An array of URL's relative to your web root which point to files to test.
+<span class='line'> 85</span>      * @type {Array}
+<span class='line'> 86</span>      * @fieldOf JasmineSpecRunnerGenerator#
+<span class='line'> 87</span>      * @default []
+<span class='line'> 88</span>      * @see JasmineSpecRunnerGenerator#addSources
+<span class='line'> 89</span>      */</span><span class="WHIT">
+<span class='line'> 90</span> </span><span class="WHIT">    </span><span class="NAME">this.sourceFiles</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'> 91</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'> 92</span>      * An array of URL's relative to your web root which point to test
+<span class='line'> 93</span>      *  specs / fixtures.
+<span class='line'> 94</span>      * @type {Array}
+<span class='line'> 95</span>      * @fieldOf JasmineSpecRunnerGenerator#
+<span class='line'> 96</span>      * @default []
+<span class='line'> 97</span>      * @see JasmineSpecRunnerGenerator#addSpecs
+<span class='line'> 98</span>      */</span><span class="WHIT">
+<span class='line'> 99</span> </span><span class="WHIT">    </span><span class="NAME">this.specs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">[</span><span class="PUNC">]</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>100</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>101</span>      * Generates SRC URL's. This will read the filenames located in fsDir and
+<span class='line'>102</span>      *  build script src paths relative to webDir.
+<span class='line'>103</span>      * @private
+<span class='line'>104</span>      * @inner
+<span class='line'>105</span>      * @param {String} fsDir The location of source files in the filesystem.
+<span class='line'>106</span>      * @param {String} webDir The location of source files relative to your web
+<span class='line'>107</span>      *  root.
+<span class='line'>108</span>      * @returns {Array} Returns an array of URL's relative to the given webDir
+<span class='line'>109</span>      *  which point to every file ending in .js located in fsDir.
+<span class='line'>110</span>      */</span><span class="WHIT">
+<span class='line'>111</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">generateSrcUrls</span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>112</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fs.readdirSync</span><span class="PUNC">(</span><span class="NAME">path.normalize</span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>113</span> </span><span class="WHIT">        </span><span class="NAME">sources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sources.filter</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">filename</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>114</span> </span><span class="WHIT">            </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">stat</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">out</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>115</span> </span><span class="WHIT">            </span><span class="KEYW">try</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>116</span> </span><span class="WHIT">                </span><span class="NAME">stat</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">fs.statSync</span><span class="PUNC">(</span><span class="NAME">path.resolve</span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">filename</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>117</span> </span><span class="WHIT">                </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">stat.isFile</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>118</span> </span><span class="WHIT">                    </span><span class="NAME">out</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">filename.match</span><span class="PUNC">(</span><span class="REGX">/\.js$/</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>119</span> </span><span class="WHIT">                </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>120</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">catch</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">e</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>121</span> </span><span class="WHIT">                </span><span class="NAME">out</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">false</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>122</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>123</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">out</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>124</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>125</span> </span><span class="WHIT">        </span><span class="NAME">sources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">sources.map</span><span class="PUNC">(</span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">item</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>126</span> </span><span class="WHIT">            </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">item</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>127</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>128</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>129</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>130</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>131</span>      * Renders the mustache template.
+<span class='line'>132</span>      * @private
+<span class='line'>133</span>      * @inner
+<span class='line'>134</span>      * @param {Error} err Any error occurring while attempting to read the
+<span class='line'>135</span>      *  template file.
+<span class='line'>136</span>      * @param {String} template The template as a string.
+<span class='line'>137</span>      * @returns {String} Returns the rendered template or throws an error.
+<span class='line'>138</span>      * @throws {Error} Throws "could not read template at: [template path]"
+<span class='line'>139</span>      */</span><span class="WHIT">
+<span class='line'>140</span> </span><span class="WHIT">    </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">render</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">template</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>141</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">view</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>142</span> </span><span class="WHIT">        </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>143</span> </span><span class="WHIT">            </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'could not read template at: '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">templatePath</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>144</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>145</span> </span><span class="WHIT">            </span><span class="NAME">view</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>146</span> </span><span class="WHIT">                </span><span class="STRN">'pageTitle'</span><span class="WHIT">                    </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">my.pageTitle</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>147</span> </span><span class="WHIT">                </span><span class="STRN">'jasmineStandaloneWebDirectory'</span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">my.jasmineDirectory</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>148</span> </span><span class="WHIT">                </span><span class="STRN">'sourceFiles'</span><span class="WHIT">                  </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">my.sourceFiles</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>149</span> </span><span class="WHIT">                </span><span class="STRN">'testSpecs'</span><span class="WHIT">                    </span><span class="PUNC">:</span><span class="WHIT"> </span><span class="NAME">my.specs</span><span class="WHIT">
+<span class='line'>150</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>151</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>152</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">mustache.render</span><span class="PUNC">(</span><span class="NAME">template</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">view</span><span class="PUNC">)</span><span class="WHIT">
+<span class='line'>153</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>154</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>155</span>      * Adds source files to test. This will read the filenames located in fsDir
+<span class='line'>156</span>      *  and build script src paths relative to your web root.
+<span class='line'>157</span>      * @methodOf JasmineSpecRunnerGenerator#
+<span class='line'>158</span>      * @param {String} fsDir The location of source files in the filesystem.
+<span class='line'>159</span>      * @param {String} webDir The location of source files relative to your web
+<span class='line'>160</span>      *  root.
+<span class='line'>161</span>      * @returns {Array} Returns the current sourceFiles array.
+<span class='line'>162</span>      * @see JasmineSpecRunnerGenerator#sourceFiles
+<span class='line'>163</span>      */</span><span class="WHIT">
+<span class='line'>164</span> </span><span class="WHIT">    </span><span class="NAME">this.addSources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>165</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">generateSrcUrls</span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>166</span> </span><span class="WHIT">        </span><span class="NAME">my.sourceFiles</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">my.sourceFiles.concat</span><span class="PUNC">(</span><span class="NAME">sources</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>167</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">my.sourceFiles</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>168</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>169</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>170</span>      * Adds test specs. This will read the filenames located in fsDir and build
+<span class='line'>171</span>      *  script src paths relative to your web root.
+<span class='line'>172</span>      * @methodOf JasmineSpecRunnerGenerator#
+<span class='line'>173</span>      * @param {String} fsDir The location of source files in the filesystem.
+<span class='line'>174</span>      * @param {String} webDir The location of source files relative to your web
+<span class='line'>175</span>      *  root.
+<span class='line'>176</span>      * @returns {Array} Returns the current specs array.
+<span class='line'>177</span>      * @see JasmineSpecRunnerGenerator#specs
+<span class='line'>178</span>      */</span><span class="WHIT">
+<span class='line'>179</span> </span><span class="WHIT">    </span><span class="NAME">this.addSpecs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>180</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">sources</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">generateSrcUrls</span><span class="PUNC">(</span><span class="NAME">fsDir</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">webDir</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>181</span> </span><span class="WHIT">        </span><span class="NAME">my.specs</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">my.specs.concat</span><span class="PUNC">(</span><span class="NAME">sources</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>182</span> </span><span class="WHIT">        </span><span class="KEYW">return</span><span class="WHIT"> </span><span class="NAME">my.specs</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>183</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>184</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>185</span>      * Generates the Jasmine Spec Runner as a string and gives it to the
+<span class='line'>186</span>      *  callback.
+<span class='line'>187</span>      * @methodOf JasmineSpecRunnerGenerator#
+<span class='line'>188</span>      * @param {Function} callback A function which takes a single string
+<span class='line'>189</span>      *  parameter.
+<span class='line'>190</span>      * @see JasmineSpecRunnerGenerator#generateFile
+<span class='line'>191</span>      */</span><span class="WHIT">
+<span class='line'>192</span> </span><span class="WHIT">    </span><span class="NAME">this.generate</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>193</span> </span><span class="WHIT">        </span><span class="NAME">callback</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">callback</span><span class="WHIT"> </span><span class="PUNC">||</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>194</span> </span><span class="WHIT">        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">cb</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>195</span> </span><span class="WHIT">            </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="NAME">render</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">data</span><span class="PUNC">)</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>196</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>197</span> </span><span class="WHIT">        </span><span class="NAME">fs.readFile</span><span class="PUNC">(</span><span class="NAME">templatePath</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="STRN">'utf8'</span><span class="PUNC">,</span><span class="WHIT"> </span><span class="NAME">cb</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>198</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>199</span> </span><span class="WHIT">    </span><span class="WHIT">
+<span class='line'>200</span> </span><span class="WHIT">    </span><span class="COMM">/**
+<span class='line'>201</span>      * Generates the Jasmine Spec Runner and writes it to outputFile, then calls
+<span class='line'>202</span>      *  the callback function.
+<span class='line'>203</span>      * @methodOf JasmineSpecRunnerGenerator#
+<span class='line'>204</span>      * @see JasmineSpecRunnerGenerator#outputFile
+<span class='line'>205</span>      * @see JasmineSpecRunnerGenerator#generate
+<span class='line'>206</span>      */</span><span class="WHIT">
+<span class='line'>207</span> </span><span class="WHIT">    </span><span class="NAME">this.generateFile</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">callback</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>208</span> </span><span class="WHIT">        </span><span class="KEYW">var</span><span class="WHIT"> </span><span class="NAME">outputFile</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">path.normalize</span><span class="PUNC">(</span><span class="NAME">my.outputFile</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>209</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'>210</span> </span><span class="WHIT">        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">cb</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>211</span> </span><span class="WHIT">            </span><span class="KEYW">if</span><span class="PUNC">(</span><span class="NAME">err</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>212</span> </span><span class="WHIT">                </span><span class="KEYW">throw</span><span class="WHIT"> </span><span class="KEYW">new</span><span class="WHIT"> </span><span class="NAME">Error</span><span class="PUNC">(</span><span class="STRN">'Could not write file '</span><span class="WHIT"> </span><span class="PUNC">+</span><span class="WHIT"> </span><span class="NAME">outputFile</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>213</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT"> </span><span class="KEYW">else</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>214</span> </span><span class="WHIT">                </span><span class="NAME">callback</span><span class="PUNC">(</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>215</span> </span><span class="WHIT">            </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>216</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>217</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'>218</span> </span><span class="WHIT">        </span><span class="KEYW">function</span><span class="WHIT"> </span><span class="NAME">write</span><span class="WHIT"> </span><span class="PUNC">(</span><span class="NAME">content</span><span class="PUNC">)</span><span class="WHIT"> </span><span class="PUNC">{</span><span class="WHIT">
+<span class='line'>219</span> </span><span class="WHIT">            </span><span class="NAME">fs.writeFile</span><span class="PUNC">(</span><span class="WHIT">
+<span class='line'>220</span> </span><span class="WHIT">                </span><span class="NAME">outputFile</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>221</span> </span><span class="WHIT">                </span><span class="NAME">content</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>222</span> </span><span class="WHIT">                </span><span class="STRN">'utf8'</span><span class="PUNC">,</span><span class="WHIT">
+<span class='line'>223</span> </span><span class="WHIT">                </span><span class="NAME">cb</span><span class="WHIT">
+<span class='line'>224</span> </span><span class="WHIT">            </span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>225</span> </span><span class="WHIT">        </span><span class="PUNC">}</span><span class="WHIT">
+<span class='line'>226</span> </span><span class="WHIT">        </span><span class="WHIT">
+<span class='line'>227</span> </span><span class="WHIT">        </span><span class="NAME">my.generate</span><span class="PUNC">(</span><span class="NAME">write</span><span class="PUNC">)</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>228</span> </span><span class="WHIT">    </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>229</span> </span><span class="PUNC">}</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>230</span> 
+<span class='line'>231</span> 
+<span class='line'>232</span> </span><span class="NAME">module.exports</span><span class="WHIT"> </span><span class="PUNC">=</span><span class="WHIT"> </span><span class="NAME">JasmineSpecRunnerGenerator</span><span class="PUNC">;</span><span class="WHIT">
+<span class='line'>233</span> 
+<span class='line'>234</span> 
+<span class='line'>235</span> </span></pre></body></html>

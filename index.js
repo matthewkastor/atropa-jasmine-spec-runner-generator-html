@@ -1,0 +1,1 @@
+module.exports = require('./src/atropa-jasmine-spec-runner-generator-html');
