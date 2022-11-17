@@ -31,4 +31,4 @@ Install it on node from npm
 `npm install atropa-jasmine-spec-runner-generator-html`
 
 Visual studio intellisense support is available in docs/vsdoc/OpenLayersAll.js
-Full documentation may be found at [http://matthewkastor.github.com/atropa-jasmine-spec-runner-generator-html](http://matthewkastor.github.com/atropa-jasmine-spec-runner-generator-html)
+Full documentation may be found at [http://matthewkastor.github.io/atropa-jasmine-spec-runner-generator-html](http://matthewkastor.github.io/atropa-jasmine-spec-runner-generator-html)
